@@ -1,2 +1,3 @@
-# Theory_of_Computation
-Theory of Computation Tutorial
+# 计算理论
+
+- 第1章：
