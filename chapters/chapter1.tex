@@ -1,32 +1,204 @@
-\chapter{}
+\chapter{有限状态自动机}
 
-\section{}
+\section{字母表}
+
+\subsection{字母表（Alphabet）}
+
+字母表是一个非空的有限集合，一般用$ \Sigma $表示，集合中的元素被称为符号/字符（symbol）。\\
+
+例如：
+
+\begin{itemize}
+	\item $ \Sigma = \{0, 1\} $：二进制数的集合。
+	\item $ \Sigma = \{a, b, \cdots, z\} $：小写字母集合。
+	\item $ \Sigma = \{(, ), [, ], \{, \}\} $：括号集合。
+\end{itemize}
+
+\vspace{0.5cm}
+
+\subsection{串（String）}
+
+串是一个由字母表中的字符组成的有限序列。\\
+
+例如：
+
+\begin{itemize}
+	\item 0011和11是$ \Sigma = \{0, 1\} $上的串。
+	\item abc和bbb是$ \Sigma = \{a, b, \cdots, z\} $上的串。
+	\item (())和(()是$ \Sigma = \{(, ), [, ], \{, \}\} $上的串。
+\end{itemize}
+
+\vspace{0.5cm}
+
+\subsubsection{空串}
+
+空串使用$ \epsilon $表示。\\
+
+\subsubsection{串的长度}
+
+\begin{itemize}
+	\item $ |0010| = 4 $
+	\item $ |aa| = 2 $
+	\item $ |\epsilon| = 0 $
+\end{itemize}
+
+\vspace{0.5cm}
+
+\subsubsection{前缀（prefix）}
+
+\begin{itemize}
+	\item aa是aaabc的前缀
+	\item aaab是aaabc的前缀
+	\item aaabc是aaabc的前缀
+\end{itemize}
+
+\vspace{0.5cm}
+
+\subsubsection{后缀（suffix）}
+
+\begin{itemize}
+	\item bc是aaabc的后缀
+	\item abc是aaabc的后缀
+	\item aaabc是aaabc的后缀
+\end{itemize}
+
+\vspace{0.5cm}
+
+\subsubsection{子串（substring）}
+
+\begin{itemize}
+	\item ab是aaabc的子串
+	\item aaa是aaabc的子串
+	\item aaabc是aaabc的子串
+\end{itemize}
+
+\vspace{0.5cm}
+
+\subsubsection{连接（concatenation）}
+
+当$ \omega = abd $，$ \alpha = ce $，那么$ \omega\alpha = abdce $。\\
+
+\subsubsection{指数（exponentiation）}
+
+当$ \omega = abd $，那么$ \omega^3 = abdabdabd $，$ \omega^0 = \epsilon $。\\
+
+\subsubsection{反转（reversal）}
+
+当$ \omega = abd $，那么$ \omega^R = dba $。\\
+
+\subsection{克林闭包（Kleene Closure）}
+
+$ \Sigma^k $用于表示所有在字母表$ \Sigma $上的长度为$ k $的串的集合。\\
+
+例如，$ \Sigma = \{a, b\} $，那么$ \Sigma^2 = \{ab, ba, aa, bb\} $，$ \Sigma^0 = \{\epsilon\} $。\\
+
+克林闭包$ \Sigma^* $用于表示所有在字母表$ \Sigma $上能够组成的串的集合。\\
+
+\vspace{-1cm}
+
+\begin{align}
+	\Sigma^* = \Sigma^0 \cup \Sigma^1 \cup \Sigma^2 \cup \cdots = \bigcup_{k \ge 0}\Sigma^k
+\end{align}
+
+正闭包$ \Sigma^+ $则是在$ \Sigma^* $中除了空串以外的所有串的集合。\\
+
+\vspace{-1cm}
+
+\begin{align}
+	\Sigma^+ = \Sigma^1 \cup \Sigma^2 \cup \Sigma^3 \cup \cdots = \bigcup_{k > 0}\Sigma^k
+\end{align}
+
+\newpage
+
+\section{语言}
+
+\subsection{语言（Language）}
+
+语言是一个字母表中所构成串的集合。\\
+
+例如，$ \Sigma = \{a, b, c, \cdots, z\} $，那么所有英语单词所构成的集合$ L $就是字母表$ \Sigma $上的语言。\\
+
+假设$ A = \{good, bad\} $和$ B = \{boy, girl\} $是两个语言，语言之间可以进行以下操作。\\
+
+\subsubsection{并集（union）}
+
+\vspace{-1cm}
+
+\begin{align}
+	A \cup B = \{x\ |\ x \in A \text{ or } x \in B\}
+\end{align}
+
+$ A \cup B = \{good, bad, boy, girl\} $\\
+
+\subsubsection{连接（concatenation）}
+
+\vspace{-1cm}
+
+\begin{align}
+	A \circ B = \{xy\ |\ x \in A \text{ or } y \in B\}
+\end{align}
+
+$ A \circ B = \{goodboy, goodgirl, badboy, badgirl\} $\\
+
+\subsubsection{闭包}
+
+\vspace{-1cm}
+
+\begin{align}
+	A^* = \{x_1, x_2, \cdots, x_k\ |\ k \ge 0 \text{ and each } x_i \in A\}
+\end{align}
+
+$ A^* = \{\epsilon, good, bad, goodgood, goodbad, badgood, badbad, goodgoodgood, goodgoodbad, \cdots\} $\\
+
+语法和语言与自动机理论密切相关，它们是许多软件实现的基础，例如编译器/解释器、文本编辑器、文本搜索、系统验证等。\\
+
+在自动机理论中，要处理的问题就是判断一个给定的串是否属于某个语言。\\
+
+例如：
+
+\begin{itemize}
+	\item $ 0^*10^* $： 只包含一个1的串的集合。
+	
+	\item $ \Sigma^*1\Sigma^* $：至少有一个1的串的集合。
+	
+	\item $ \Sigma^*001\Sigma^* $：包含子串001的串的集合。
+	
+	\item $ (\Sigma\Sigma)^* $：长度为偶数的串的集合。
+	
+	\item $ (\Sigma\Sigma\Sigma)^* $：长度为3的倍数的串的集合。
+\end{itemize}
+
+\newpage
+
+\section{确定性有限状态自动机}
+
+\subsection{确定性有限状态自动机（DFA, Deterministic Finite Automatons）}
+
+有限状态机（FSM, Finite State Machine）用于决定程序当前状态和状态间的切换，状态机最终只能指向一个结果。\\
 
 \begin{figure}[H]
 	\centering
-	\begin{tikzpicture}[node distance=5cm]
-		\node[state, initial, draw, align=center] (s1) {wait for\\call};
-		\node[state, right of=s1, draw, align=center] (s2) {wait for\\ACK/NAK};
+	\begin{tikzpicture}[node distance=4cm]
+		\node[state, initial, draw, align=center] (s1) {off};
+		\node[state, right of=s1, draw, align=center] (s2) {on};
 
-		\draw[->] (s1) edge[above, bend left] node{} (s2);
-		\draw[->] (s2) edge[above, bend left] node{} (s1);
-		\draw[->] (s2) edge[loop right] node{} (s2);
-
-		\draw (0,3) node {rdt\_send(data)};
-		\draw (-2.5,2.75) -- (2.5,2.75);
-		\draw (0,2.5) node {sndpkt = make\_pkt(data)};
-		\draw (-0.8,2) node {udt\_send(sndpkt)};
-
-		\draw (9,2) node {rdt\_rcv(rcvpkt) \&\& is\_nak(rcvpkt)};
-		\draw (5.5,1.75) -- (12.5,1.75);
-		\draw (9,1.5) node {udt\_send(sndpkt)};
-
-		\draw (3,-2) node {rdt\_rcv(rcvpkt) \&\& is\_ack(rcvpkt)};
-		\draw (-0.5,-2.25) -- (6.5,-2.25);
-		\draw (3,-2.5) node {$ \wedge $};
+		\draw[->] (s1) edge[above, bend left] node{1} (s2);
+		\draw[->] (s2) edge[above, bend left] node{0} (s1);
 	\end{tikzpicture}
-	\caption{rdt 2.0发送端}
+	\caption{有限状态机}
 \end{figure}
+
+DFA使用一个五元组$ (Q, \Sigma, \delta, q_0, F) $表示，其中
+
+\begin{itemize}
+	\item $ Q $：状态的集合
+	\item $ \Sigma $：字母表
+	\item $ \delta $：状态转移函数（transition function） 
+	\item $ q_0 $：初始状态
+	\item $ F $：终结状态集合
+\end{itemize}
+
+\newpage
 
 \begin{figure}[H]
 	\centering
@@ -79,3 +251,5 @@
 	\end{tikzpicture}
 	\caption{rdt 2.1发送端}
 \end{figure}
+
+\newpage
