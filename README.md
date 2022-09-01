@@ -1,19 +1,16 @@
-# 计算理论
+# 编译原理
 
-- 第1章：
+- 第1章：有限状态自动机
+    - 1.1 字母表
+    - 1.2 语言
+    - 1.3 DFA
+    - 1.4 NFA
 
 ---
 
-1. 语言
-    - 字母表
-    - 语言
-
 2. 有限状态自动机
-    - 确定型有限自动机
-    - 非确定型有限自动机
-    - 有限自动机与正则表达式
+    - 正则表达式
     - 正则语言与非正则语言
-    - 状态最小化
 
 3. 上下文无关语言
     - 上下文无关文法
@@ -39,17 +36,6 @@
 ---
 
 Topics to be covers:
-
-Automata Language自动机语言
-
-- Grammar
-- Alphabets
-- Strings
-- Language
-- DFA
-- Regular Operations
-- Minimizing DFA
-- NFA
 
 Regular Expression & Lexical Analysis
 

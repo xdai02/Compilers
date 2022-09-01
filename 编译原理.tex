@@ -38,6 +38,14 @@
 \usetikzlibrary{matrix,backgrounds}
 \usetikzlibrary{automata}
 
+\tikzset{
+	->,
+	>=stealth,
+	node distance=3cm,
+	every state/.style={thick, fill=gray!10},
+	initial text=$ Start $,
+}
+
 \tikzset{block/.style={
         font=\sffamily,
         draw=black,
@@ -197,8 +205,8 @@
 	% Title
 	\node[align=center] at ($(current page.center)+(0,-7)$)
 	{
-	{\fontsize{60}{60} \selectfont {{计算理论}}}\\[1cm]
-	{\fontsize{40}{40} \selectfont {{Theory of Computation}}}\\[2cm]
+	{\fontsize{60}{60} \selectfont {{编译原理}}}\\[1cm]
+	{\fontsize{40}{40} \selectfont {{Compilers}}}\\[2cm]
 	{\fontsize{20}{19.2} \selectfont \textcolor{orange}{ \bf 极夜酱}}\\[4pt]
 	};
 \end{tikzpicture}
