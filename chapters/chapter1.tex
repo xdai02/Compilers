@@ -9,7 +9,7 @@
 例如：
 
 \begin{itemize}
-	\item $ \Sigma = \{0, 1\} $：二进制数的集合。
+	\item $ \Sigma = \{0, 1\} $：二进制数集合。
 	\item $ \Sigma = \{a, b, \cdots, z\} $：小写字母集合。
 	\item $ \Sigma = \{(, ), [, ], \{, \}\} $：括号集合。
 \end{itemize}
@@ -412,3 +412,97 @@ $ \epsilon $-NFA允许不消耗输入字符在状态之间转移。\\
 
 \newpage
 
+\section{正则表达式}
+
+\subsection{编译器（Compiler）}
+
+编译器是一种特殊的程序，可以将一种编程语言的源代码翻译成机器码、字节码或另一种编程语言。\\
+
+编译器包含以下阶段：
+
+\begin{enumerate}
+	\item 词法分析器（lexical analyzer）
+	\item 语法分析器（syntex analyzer）
+	\item 语义分析器（semantic analyzer）
+	\item 中间代码生成器（intermediate code generator）
+	\item 代码优化器（code optimizer）
+	\item 代码生成器（code generator）
+\end{enumerate}
+
+\vspace{0.5cm}
+
+\subsection{词法分析}
+
+词法分析是编译器的第一步，它的主要任务是读取源代码，并生成能够被解析器（parser）进行语法分析的tokens和语法书（syntex tree）。\\
+
+例如time = hour * 60 + minute，经过词法分析后，将会得到：
+
+\begin{itemize}
+	\item id(time)
+	\item assignment(=)
+	\item id(hour)
+	\item op(*)
+	\item num(60)
+	\item op(+)
+	\item id(minute)
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\begin{tikzpicture}[
+			-,
+			level distance=2cm,
+			level 1/.style={sibling distance=5cm},
+			level 2/.style={sibling distance=3cm},
+			level 3/.style={sibling distance=3cm}
+		]
+		\node {assignment(=)}
+		child {
+				node {id(time)}
+			}
+		child {
+				node {op(+)}
+				child {
+						node {op(*)}
+						child {
+								node {id(hour)}
+							}
+						child {
+								node {num(60)}
+							}
+					}
+				child {
+						node {minute}
+					}
+			};
+	\end{tikzpicture}
+	\caption{语法树}
+\end{figure}
+
+\vspace{0.5cm}
+
+\subsection{正则表达式（Regex, Regular Expression）}
+
+正则表达式描述了字符串匹配的模式（pattern），可以用来检查一个串是否包含某个子串、替换子串、或提取符合条件的子串。像grep、vi、python、lex等工具都支持正则表达式的使用。\\
+
+例如用于匹配一个合法的变量名的正则表达式为[a-zA-Z\_][a-zA-Z0-9\_]*。即变量名只能由字母或下划线开头，后面可以是任意多个字母、数字或下划线。\\
+
+正则表达式支持以下操作：
+
+\begin{itemize}
+	\item 连接：$ ab $或$ a \cdot b $
+	\item 选择：$ a\ |\ b $
+	\item 克林闭包：$ a^* = \{\epsilon, a, aa, aaa, \cdots\} $
+	\item 匹配至少1次：$ a^+ = aa^* $
+	\item 匹配0次或1次：$ a? = a\ |\ \epsilon $
+	\item 匹配任意字符：$ . $
+	\item 补集：$ ~(a\ |\ b) $
+\end{itemize}
+
+其中克林闭包运算的优先级最高，其次是连接，最后是选择。\\
+
+例如$ (a\ |\ b)^*aa(a\ |\ b)^* $用于匹配包含连续的a的串，$ b^*(abb^*)^*(a\ |\ \epsilon) $用于匹配没有连续的a的串。\\
+
+然而$ a^nb^n\ (n \ge 0) $却不是正则语言，因为它无法用有限个状态来验证a和b的出现次数是相等的。\\
+
+\newpage
