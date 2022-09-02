@@ -1,5 +1,345 @@
 \chapter{上下文无关语言}
 
-\section{}
+\section{上下文无关文法}
 
-\subsection{}
+\subsection{上下文无关文法（CFG, Context Free Grammar）}
+
+CFG能够描述某些具有递归结构的特征，它有足够强的语言表达力来表示大多数编程语言的语法。\\
+
+CFG由一个四元组$ (V, T, P, S) $表示：
+
+\begin{itemize}
+    \item $ V $：变元（variable）/非终结符（non-terminal）集合，用大写字母表示。
+    \item $ T $：终结符（terminal）集合，用小写字母表示。
+    \item $ P $：产生式（production）集合。
+    \item $ S $：开始符号。
+\end{itemize}
+
+一个文法由一组替换规则产生。产生式集合
+
+\vspace{-1cm}
+
+\begin{align*}
+    A & \rightarrow \alpha_1 \\
+    A & \rightarrow \alpha_2 \\
+      & \cdots               \\
+    A & \rightarrow \alpha_k
+\end{align*}
+
+可以被写成$ A \rightarrow \alpha_1\ |\ \alpha_2\ |\ \cdots\ |\ \alpha_k\ $的形式。\\
+
+\subsection{推导（Derivation）}
+
+推导用于确定符合文法规则的串的集合，即用来确定一个语言。\\
+
+推导从开始符号开始，通过产生式进行替换，得到最终结果。\\
+
+例如$ E \rightarrow E + E\ |\ E * E\ |\ (E)\ |\ id $，由开始符号$ E $可以推导出$ (id + id) * id $。
+
+\vspace{-1cm}
+
+\begin{align*}
+    E & \Rightarrow E * E          \\
+      & \Rightarrow (E) * E        \\
+      & \Rightarrow (E) * id       \\
+      & \Rightarrow (E + E) * id   \\
+      & \Rightarrow (E + id) * id  \\
+      & \Rightarrow (id + id) * id
+\end{align*}
+
+解析树（parse tree）是描述推导的一种直观方法。\\
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[
+            -,
+            level distance=1.5cm,
+            level 1/.style={sibling distance=4cm},
+            level 2/.style={sibling distance=3cm},
+            level 3/.style={sibling distance=2cm},
+            level 4/.style={sibling distance=1cm}
+        ]
+        \node {$ E $}
+        child {
+                node {$ E $}
+                child {
+                        node {$ ( $}
+                    }
+                child {
+                        node {$ E $}
+                        child {
+                                node {$ E $}
+                                child {
+                                        node {$ id $}
+                                    }
+                            }
+                        child {
+                                node {$ + $}
+                            }
+                        child {
+                                node {$ E $}
+                                child {
+                                        node {$ id $}
+                                    }
+                            }
+                    }
+                child {
+                        node {$ ) $}
+                    }
+            }
+        child {
+                node {$ * $}
+            }
+        child {
+                node {$ E $}
+                child {
+                        node {$ id $}
+                    }
+            };
+    \end{tikzpicture}
+    \caption{分析树}
+\end{figure}
+
+\vspace{0.5cm}
+
+如果只关注语义分析和代码生成所需的信息，可以将分析树简化为一棵抽象语法树（abstract syntex tree）。\\
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[
+            -,
+            level distance=1.5cm,
+            level 1/.style={sibling distance=3cm},
+            level 2/.style={sibling distance=2cm},
+            level 3/.style={sibling distance=2cm}
+        ]
+        \node {$ * $}
+        child {
+                node {$ + $}
+                child {
+                        node {$ id $}
+                    }
+                child {
+                        node {$ id $}
+                    }
+            }
+        child {
+                node {$ id $}
+            };
+    \end{tikzpicture}
+    \caption{抽象语法树}
+\end{figure}
+
+\vspace{0.5cm}
+
+\subsection{二义性（Ambiguity）}
+
+在推导的过程中涉及到同级别表达式的替换，因此按顺序可以分为最左推导（leftmost derivation）和最右推导（rightmost derivation）。\\
+
+文法的二义性，是指对于符合文法规则的同一个句子，存在两种可能的分析树。\\
+
+例如$ E \rightarrow E + E\ |\ E * E\ |\ (E)\ |\ x\ |\ y\ |\ z $，使用最左推导会对$ x + y * z $产生两个不同的分析树。\\
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[
+            -,
+            level distance=1.5cm,
+            level 1/.style={sibling distance=3cm},
+            level 2/.style={sibling distance=2cm},
+            level 3/.style={sibling distance=2cm}
+        ]
+        \node {$ E $}
+        child {
+                node {$ E $}
+                child {
+                        node {$ x $}
+                    }
+            }
+        child {
+                node {$ + $}
+            }
+        child {
+                node {$ E $}
+                child {
+                        node {$ y $}
+                    }
+                child {
+                        node {$ * $}
+                    }
+                child {
+                        node {$ z $}
+                    }
+            };
+    \end{tikzpicture}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[
+            -,
+            level distance=1.5cm,
+            level 1/.style={sibling distance=3cm},
+            level 2/.style={sibling distance=2cm},
+            level 3/.style={sibling distance=2cm}
+        ]
+        \node {$ E $}
+        child {
+                node {$ E $}
+                child {
+                        node {$ x $}
+                    }
+                child {
+                        node {$ + $}
+                    }
+                child {
+                        node {$ y $}
+                    }
+            }
+        child {
+                node {$ * $}
+            }
+        child {
+                node {$ E $}
+                child {
+                        node {$ z $}
+                    }
+            };
+    \end{tikzpicture}
+\end{figure}
+
+\vspace{0.5cm}
+
+产生二义性的原因在于运算符之间的优先级在文法中并没有体现。消除二义性的办法就是在文法中引入一个中间量。
+
+\vspace{-1cm}
+
+\begin{align*}
+    E & \rightarrow E + T\ |\ T \\
+    T & \rightarrow T * F\ |\ F \\
+    F & \rightarrow id\ |\ (E)
+\end{align*}
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[
+            -,
+            level distance=1.5cm,
+            level 1/.style={sibling distance=3cm},
+            level 2/.style={sibling distance=2cm},
+            level 3/.style={sibling distance=2cm}
+        ]
+        \node {$ E $}
+        child {
+                node {$ E $}
+                child {
+                        node {$ T $}
+                        child {
+                                node {$ F $}
+                                child {
+                                        node {$ x $}
+                                    }
+                            }
+                    }
+            }
+        child {
+                node {$ + $}
+            }
+        child {
+                node {$ T $}
+                child {
+                        node {$ T $}
+                        child {
+                                node {$ F $}
+                                child {
+                                        node {$ y $}
+                                    }
+                            }
+                    }
+                child {
+                        node {$ * $}
+                    }
+                child {
+                        node {$ F $}
+                        child {
+                                node {$ z $}
+                            }
+                    }
+            };
+    \end{tikzpicture}
+\end{figure}
+
+\newpage
+
+\section{CNF}
+
+\subsection{上下文无关语言}
+
+CFG可以用来表示语言$ \{a^nb^n\ |\ n > 0\} $：
+
+\vspace{-1cm}
+
+\begin{align*}
+    S & \rightarrow aSb \\
+    S & \rightarrow ab
+\end{align*}
+
+例如根据$ S $可以生成生成aaabbb：
+
+\vspace{-1cm}
+
+\begin{align*}
+    S & \Rightarrow aSb    \\
+      & \Rightarrow aaSbb  \\
+      & \Rightarrow aaabbb
+\end{align*}
+
+CFG好还可以用于表示$ a $和$ b $出现相等次数的语言，例如babaab：
+
+\vspace{-1cm}
+
+\begin{align*}
+    S & \rightarrow aB\ |\ bA        \\
+    A & \rightarrow a\ |\ aS\ |\ bAA \\
+    B & \rightarrow b\ |\ bS\ |\ aBB
+\end{align*}
+
+设计CFG需要一定的创造力，大部分复杂的CFG可以由多个简单的CFG并集组成。\\
+
+例如设计一个能够表示语言$ \{0^n1^n\ |\ n \ge 0\} \cup \{1^n0^n\ |\ n \ge 0\} $的CFG。\\
+
+这两个部分可以分别表示为：
+
+\vspace{-1cm}
+
+\begin{align*}
+    S_1 & \rightarrow 0S_{1}1\ |\ \epsilon \\
+    S_2 & \rightarrow 1S_{2}0\ |\ \epsilon
+\end{align*}
+
+只需合并这两个部分，即可得到最终的CFG：
+
+\vspace{-1cm}
+
+\begin{align*}
+    S   & \rightarrow S_1\ |\ S_2          \\
+    S_1 & \rightarrow 0S_{1}1\ |\ \epsilon \\
+    S_2 & \rightarrow 1S_{2}0\ |\ \epsilon
+\end{align*}
+
+\vspace{0.5cm}
+
+\subsection{乔姆斯基范式（CNF, Chomsky Normal Form）}
+
+CFG可以被转换为一些更加简洁的形式，如CNF。\\
+
+CNF规定每条CFG的每一条规则都必须满足：
+
+\begin{enumerate}
+    \item $ A \rightarrow BC $
+    \item $ A \rightarrow a $
+\end{enumerate}
+
+其中
+
+\newpage

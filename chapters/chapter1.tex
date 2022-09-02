@@ -211,6 +211,7 @@ $ A^* = \{\epsilon, good, bad, goodgood, goodbad, badgood, badbad, goodgoodgood,
 		(q1) edge[bend left, below] node{0} (q0)
 		(q1) edge[loop above] node{1} (q1);
 	\end{tikzpicture}
+	\caption{识别空串或以0结尾的串的DFA}
 \end{figure}
 
 其中$ Q = \{q_0, q_1\} $，$ \Sigma = \{0, 1\} $，$ q_0 $为初始状态，$ F = \{q_0\} $，$ \delta $为
@@ -249,6 +250,7 @@ $ A^* = \{\epsilon, good, bad, goodgood, goodbad, badgood, badbad, goodgoodgood,
 		(q00) edge[above] node{1} (q001)
 		(q001) edge[loop above] node{0,1} (q001);
 	\end{tikzpicture}
+	\caption{识别包含子串001的串的DFA}
 \end{figure}
 
 \vspace{0.5cm}
@@ -311,6 +313,7 @@ $ A^* = \{\epsilon, good, bad, goodgood, goodbad, badgood, badbad, goodgoodgood,
 		(f) edge[right] node{1} (g)
 		(f) edge[below] node{0} (c);
 	\end{tikzpicture}
+	\caption{最小化DFA}
 \end{figure}
 
 \newpage
@@ -337,6 +340,7 @@ $ A^* = \{\epsilon, good, bad, goodgood, goodbad, badgood, badbad, goodgoodgood,
 		(q2) edge[above] node{1} (q3)
 		(q3) edge[loop above] node{0,1} (q3);
 	\end{tikzpicture}
+	\caption{NFA}
 \end{figure}
 
 因此，在NFA中，每个状态允许对相同输入存在0个、1个或多个转移的状态。如果存在一条能够到达终结状态的路径，那么就称当前的输入是被NFA接受的。\\
@@ -379,6 +383,7 @@ NFA并不比DFA更加强大，理论证明NFA与DFA是等价的。\\
 		(q0q1) edge[loop left] node{0,1} (q0q1)
 		(e) edge[loop right] node{0,1} (e);
 	\end{tikzpicture}
+	\caption{NFA转换DFA}
 \end{figure}
 
 \vspace{0.5cm}
@@ -408,6 +413,7 @@ $ \epsilon $-NFA允许不消耗输入字符在状态之间转移。\\
 		(q4) edge[right] node{.} (q3)
 		(q3) edge[above] node{$ \epsilon $} (q5);
 	\end{tikzpicture}
+	\caption{接受小数的$ \epsilon $-NFA}
 \end{figure}
 
 \newpage
@@ -503,6 +509,6 @@ $ \epsilon $-NFA允许不消耗输入字符在状态之间转移。\\
 
 例如$ (a\ |\ b)^*aa(a\ |\ b)^* $用于匹配包含连续的a的串，$ b^*(abb^*)^*(a\ |\ \epsilon) $用于匹配没有连续的a的串。\\
 
-然而$ a^nb^n\ (n \ge 0) $却不是正则语言，因为它无法用有限个状态来验证a和b的出现次数是相等的。\\
+然而$ \{a^nb^n\ |\ n > 0\} $却不是正则语言，因为它无法用有限个状态来验证a和b的出现次数是相等的。\\
 
 \newpage

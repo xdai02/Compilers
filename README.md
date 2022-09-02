@@ -8,15 +8,13 @@
     - 1.5 正则表达式
 
 - 第2章：上下文无关语言
-    - 2.1
+    - 2.1 上下文无关文法
+    - 2.2 CNF
 
 ---
 
 2. 上下文无关语言
-    - 上下文无关文法
-    - 语法分析树
     - 下推自动机
-    - 上下文无关语言与非上下文无关语言
     - 确定性与语法分析
 
 3. Turing机
@@ -36,11 +34,6 @@
 ---
 
 Topics to be covers:
-
-- Context Free Grammars
-- Parse Tree
-- Ambiguity
-- Chomsky Normal Form
 
 Push Down Automatons
 
