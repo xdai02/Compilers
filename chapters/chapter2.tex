@@ -465,7 +465,7 @@ DFA和NFA由于受限于存储空间的问题，不能识别类似于$ \{a^nb^n\
         \node at (4.5,-3) {input};
 
         { [start chain=2 going below]
-        \node[draw] [on chain] at (-2,-3){0};
+        \node[draw] [on chain] at (-2,-3){$ 0 $};
         \node[draw] [on chain] {$ x $};
         \node[draw] [on chain] {$ y $};
         \node[draw] [on chain] {$ z $};
@@ -501,4 +501,201 @@ PDA由一个六元组$ (Q, \Sigma, \Gamma, \delta, q_0, F) $表示：
     \item 使用$ a $代替栈顶元素$ b $，并进入状态$ q_4 $。
     \item 栈保持原样（$ b $为栈顶），并进入状态$ q_5 $。
 \end{enumerate}
+
+\vspace{0.5cm}
+
+能够识别$ \{a^nb^n\ |\ n \ge 0\} $的PDA如下：
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+        \node[state, initial, accepting] (q0) {$ q_0 $};
+        \node[state] (q1) at (4,0) {$ q_1 $};
+        \node[state] (q2) at (4,-4) {$ q_2 $};
+        \node[state, accepting] (q3) at (0,-4) {$ q_3 $};
+
+        \draw (q0) edge[above] node{$ \epsilon, \epsilon \rightarrow \$ $} (q1)
+        (q1) edge[loop above] node{$ a, \epsilon \rightarrow a $} (q1)
+        (q1) edge[right] node{$ b, a \rightarrow \epsilon $} (q2)
+        (q2) edge[loop right] node{$ b, a \rightarrow \epsilon $} (q2)
+        (q2) edge[above] node{$ \epsilon, \$ \rightarrow \epsilon $} (q3);
+    \end{tikzpicture}
+    \caption{识别$ \{a^nb^n\ |\ n \ge 0\} $的PDA}
+\end{figure}
+
+识别串$ aabb $的过程如下：\\
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[node distance=0mm, every node/.style={minimum size=8mm}]
+        \node[draw] (deb) {State Control};
+
+        { [start chain=1]
+        \node[draw] [on chain] at (3,-2){$ a $};
+        \node[draw] [on chain] {$ a $};
+        \node[draw] [on chain] {$ b $};
+        \node[draw] [on chain] {$ b $};
+        }
+        \node at (4.5,-3) {input};
+
+        { [start chain=2 going below]
+        \node[draw] [on chain] at (-2,-3){$ $};
+        \node[draw] [on chain] {$ $};
+        \node[draw] [on chain] {$ $};
+        \node[draw] [on chain] {$ \$ $};
+        }
+        \node at (-2,-6.5) {stack};
+
+        \begin{scope}[->,>=latex']
+            \draw (deb.east) -| (1-1);
+            \draw (deb.south) |- (2-4.east);
+        \end{scope}
+    \end{tikzpicture}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[node distance=0mm, every node/.style={minimum size=8mm}]
+        \node[draw] (deb) {State Control};
+
+        { [start chain=1]
+        \node[draw] [on chain] at (3,-2){$ a $};
+        \node[draw] [on chain] {$ b $};
+        \node[draw] [on chain] {$ b $};
+        \node[draw] [on chain] {$  $};
+        }
+        \node at (4.5,-3) {input};
+
+        { [start chain=2 going below]
+        \node[draw] [on chain] at (-2,-3){$ $};
+        \node[draw] [on chain] {$ $};
+        \node[draw] [on chain] {$ a $};
+        \node[draw] [on chain] {$ \$ $};
+        }
+        \node at (-2,-6.5) {stack};
+
+        \begin{scope}[->,>=latex']
+            \draw (deb.east) -| (1-1);
+            \draw (deb.south) |- (2-3.east);
+        \end{scope}
+    \end{tikzpicture}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[node distance=0mm, every node/.style={minimum size=8mm}]
+        \node[draw] (deb) {State Control};
+
+        { [start chain=1]
+        \node[draw] [on chain] at (3,-2){$ b $};
+        \node[draw] [on chain] {$ b $};
+        \node[draw] [on chain] {$ $};
+        \node[draw] [on chain] {$ $};
+        }
+        \node at (4.5,-3) {input};
+
+        { [start chain=2 going below]
+        \node[draw] [on chain] at (-2,-3){$ $};
+        \node[draw] [on chain] {$ a $};
+        \node[draw] [on chain] {$ a $};
+        \node[draw] [on chain] {$ \$ $};
+        }
+        \node at (-2,-6.5) {stack};
+
+        \begin{scope}[->,>=latex']
+            \draw (deb.east) -| (1-1);
+            \draw (deb.south) |- (2-2.east);
+        \end{scope}
+    \end{tikzpicture}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[node distance=0mm, every node/.style={minimum size=8mm}]
+        \node[draw] (deb) {State Control};
+
+        { [start chain=1]
+        \node[draw] [on chain] at (3,-2){$ b $};
+        \node[draw] [on chain] {$ $};
+        \node[draw] [on chain] {$ $};
+        \node[draw] [on chain] {$ $};
+        }
+        \node at (4.5,-3) {input};
+
+        { [start chain=2 going below]
+        \node[draw] [on chain] at (-2,-3){$ $};
+        \node[draw] [on chain] {$ $};
+        \node[draw] [on chain] {$ a $};
+        \node[draw] [on chain] {$ \$ $};
+        }
+        \node at (-2,-6.5) {stack};
+
+        \begin{scope}[->,>=latex']
+            \draw (deb.east) -| (1-1);
+            \draw (deb.south) |- (2-3.east);
+        \end{scope}
+    \end{tikzpicture}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[node distance=0mm, every node/.style={minimum size=8mm}]
+        \node[draw] (deb) {State Control};
+
+        { [start chain=1]
+        \node[draw] [on chain] at (3,-2){$ $};
+        \node[draw] [on chain] {$ $};
+        \node[draw] [on chain] {$ $};
+        \node[draw] [on chain] {$ $};
+        }
+        \node at (4.5,-3) {input};
+
+        { [start chain=2 going below]
+        \node[draw] [on chain] at (-2,-3){$ $};
+        \node[draw] [on chain] {$ $};
+        \node[draw] [on chain] {$ $};
+        \node[draw] [on chain] {$ \$ $};
+        }
+        \node at (-2,-6.5) {stack};
+
+        \begin{scope}[->,>=latex']
+            \draw (deb.east) -| (1-1);
+            \draw (deb.south) |- (2-4.east);
+        \end{scope}
+    \end{tikzpicture}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[node distance=0mm, every node/.style={minimum size=8mm}]
+        \node[draw] (deb) {State Control};
+
+        { [start chain=1]
+        \node[draw] [on chain] at (3,-2){$ $};
+        \node[draw] [on chain] {$ $};
+        \node[draw] [on chain] {$ $};
+        \node[draw] [on chain] {$ $};
+        }
+        \node at (4.5,-3) {input};
+
+        { [start chain=2 going below]
+        \node[draw] [on chain] at (-2,-3){$ $};
+        \node[draw] [on chain] {$ $};
+        \node[draw] [on chain] {$ $};
+        \node[draw] [on chain] {$ $};
+        }
+        \node at (-2,-6.5) {stack};
+
+        \begin{scope}[->,>=latex']
+            \draw (deb.east) -| (1-1);
+            \draw (deb.south) |- (2-4.east);
+        \end{scope}
+    \end{tikzpicture}
+\end{figure}
+
+\newpage
+
+\section{预测分析法}
+
+\subsection{预测分析法（Predictive Parser）}
 
