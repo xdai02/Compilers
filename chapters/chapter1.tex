@@ -172,7 +172,7 @@ $ A^* = \{\epsilon, good, bad, goodgood, goodbad, badgood, badbad, goodgoodgood,
 
 \section{DFA}
 
-\subsection{DFA（Deterministic Finite Automaton）}
+\subsection{DFA（Deterministic Finite Automata）}
 
 有限状态机（FSM, Finite State Machine）用于决定程序当前状态和状态间的切换，状态机最终只能指向一个结果。
 
@@ -188,15 +188,17 @@ $ A^* = \{\epsilon, good, bad, goodgood, goodbad, badgood, badbad, goodgoodgood,
 	\caption{有限状态机}
 \end{figure}
 
-确定性有限状态自动机DFA使用一个五元组$ (Q, \Sigma, \delta, q_0, F) $表示，其中
+确定性有限状态自动机DFA由一个五元组$ (Q, \Sigma, \delta, q_0, F) $表示，其中
 
 \begin{itemize}
-	\item $ Q $：状态的集合
+	\item $ Q $：状态集合
 	\item $ \Sigma $：字母表
 	\item $ \delta $：状态转移函数（transition function）
 	\item $ q_0 $：初始状态
 	\item $ F $：终结状态集合
 \end{itemize}
+
+\vspace{0.5cm}
 
 例如DFA可以用来识别空串或者以0结尾的串：
 
@@ -320,7 +322,7 @@ $ A^* = \{\epsilon, good, bad, goodgood, goodbad, badgood, badbad, goodgoodgood,
 
 \section{NFA}
 
-\subsection{NFA（Non-deterministic Finite Automaton）}
+\subsection{NFA（Non-deterministic Finite Automata）}
 
 在DFA中，每个状态的下一个状态都是唯一确定的，但是非确定性有限状态自动机NFA可能会存在多个下一状态。\\
 
@@ -505,10 +507,12 @@ $ \epsilon $-NFA允许不消耗输入字符在状态之间转移。\\
 	\item 补集：$ ~(a\ |\ b) $
 \end{itemize}
 
+\vspace{0.5cm}
+
 其中克林闭包运算的优先级最高，其次是连接，最后是选择。\\
 
 例如$ (a\ |\ b)^*aa(a\ |\ b)^* $用于匹配包含连续的a的串，$ b^*(abb^*)^*(a\ |\ \epsilon) $用于匹配没有连续的a的串。\\
 
-然而$ \{a^nb^n\ |\ n > 0\} $却不是正则语言，因为它无法用有限个状态来验证a和b的出现次数是相等的。\\
+然而$ \{a^nb^n\ |\ n \ge 0\} $却不是正则语言，因为它无法用有限个状态来验证a和b的出现次数是相等的。\\
 
 \newpage

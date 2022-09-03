@@ -15,6 +15,8 @@ CFG由一个四元组$ (V, T, P, S) $表示：
     \item $ S $：开始符号。
 \end{itemize}
 
+\vspace{0.5cm}
+
 一个文法由一组替换规则产生。产生式集合
 
 \vspace{-1cm}
@@ -275,7 +277,7 @@ CFG由一个四元组$ (V, T, P, S) $表示：
 
 \subsection{上下文无关语言}
 
-CFG可以用来表示语言$ \{a^nb^n\ |\ n > 0\} $：
+CFG可以用来表示语言$ \{a^nb^n\ |\ n \ge 0\} $：
 
 \vspace{-1cm}
 
@@ -331,15 +333,172 @@ CFG好还可以用于表示$ a $和$ b $出现相等次数的语言，例如baba
 
 \subsection{乔姆斯基范式（CNF, Chomsky Normal Form）}
 
-CFG可以被转换为一些更加简洁的形式，如CNF。\\
+CNF在保留相同语言的同时对语法规则施加了一些限制，好处是可以避免解析过程中的歧义问题，另一个好处就是为解析的复杂度提供了一个上限。\\
 
 CNF规定每条CFG的每一条规则都必须满足：
 
 \begin{enumerate}
-    \item $ A \rightarrow BC $
-    \item $ A \rightarrow a $
+    \item $ S \rightarrow \epsilon $：开始变元$ S $可以为空。
+    \item $ A \rightarrow BC $：单个变元可以推导出两个变元，其中$ B $、$ C $不能为开始变元。
+    \item $ A \rightarrow a $：单个变元可以被终结符替换。
+    \item 不能出现单个变元推导出单个变元。
 \end{enumerate}
 
-其中
+\vspace{0.5cm}
+
+将CFG转换为CNF的步骤为：
+
+\begin{enumerate}
+    \item 添加新的开始变元：确保开始变元始终在规则的左侧。
+    \item 消除所有$ \epsilon $规则：消除从变元到空字符的规则。
+    \item 消除所有$ A \rightarrow B $规则：消除单个变元到单个变元的规则。
+    \item 添加变元：为了满足$ A \rightarrow BC $的规则，需要将$ A \rightarrow BCD $替换为$ A \rightarrow ED $，即添加变元$ E \rightarrow BC $。
+\end{enumerate}
+
+\vspace{0.5cm}
+
+例如将CFG转换为CNF：
+
+\vspace{-1cm}
+
+\begin{align*}
+    S & \rightarrow ABA             \\
+    A & \rightarrow aA\ |\ \epsilon \\
+    B & \rightarrow bB\ |\ \epsilon
+\end{align*}
+
+\subsubsection{消除所有$ \epsilon $规则}
+
+将$ A \rightarrow \epsilon $的规则，替换到出现$ A $的规则中：
+
+\vspace{-1cm}
+
+\begin{align*}
+    S & \rightarrow ABA\ |\ \textcolor{red}{BA\ |\ AB\ |\ B} \\
+    A & \rightarrow aA\ |\ \textcolor{red}{a}                \\
+    B & \rightarrow bB\ |\ \epsilon
+\end{align*}
+
+将$ B \rightarrow \epsilon $的规则，替换到出现$ B $的规则中：
+
+\vspace{-1cm}
+
+\begin{align*}
+    S & \rightarrow ABA\ |\ BA\ |\ AB\ |\ B\ |\ \textcolor{red}{AA\ |\ A} \\
+    A & \rightarrow aA\ |\ a                                              \\
+    B & \rightarrow bB\ |\ \textcolor{red}{b}
+\end{align*}
+
+\subsubsection{消除所有$ A \rightarrow B $规则}
+
+在$ S $中出现了单个变元到单个变元的情况，将这些规则进一步替换：
+
+\vspace{-1cm}
+
+\begin{align*}
+    S & \rightarrow ABA\ |\ BA\ |\ AB\ |\ \textcolor{red}{bB\ |\ b}\ |\ AA\ |\ \textcolor{red}{aA\ |\ a} \\
+    A & \rightarrow aA\ |\ a                                                                             \\
+    B & \rightarrow bB\ |\ b
+\end{align*}
+
+目前，$ S \rightarrow BA $、$ S \rightarrow AA $、$ S \rightarrow AB $、$ S \rightarrow a $、$ S \rightarrow b $、$ A \rightarrow a $、$ B \rightarrow b $这些规则已经满足了CNF的要求：
+
+\vspace{-1cm}
+
+\begin{align*}
+    S & \rightarrow ABA\ |\ \textcolor{ForestGreen}{BA\ |\ AB}\ |\ bB\ |\ \textcolor{ForestGreen}{b\ |\ AA}\ |\ aA\ |\ \textcolor{ForestGreen}{a} \\
+    A & \rightarrow aA\ |\ \textcolor{ForestGreen}{a}                                                                                             \\
+    B & \rightarrow bB\ |\ \textcolor{ForestGreen}{b}
+\end{align*}
+
+\subsubsection{添加变元}
+
+为了消除$ A \rightarrow BCD $这种情况，需要添加新的变元进行替换。\\
+
+假设$ X \rightarrow AB $：
+
+\vspace{-1cm}
+
+\begin{align*}
+    S                  & \rightarrow \textcolor{red}{XA}\ |\ \textcolor{ForestGreen}{BA\ |\ AB}\ |\ bB\ |\ \textcolor{ForestGreen}{b\ |\ AA}\ |\ aA\ |\ \textcolor{ForestGreen}{a} \\
+    A                  & \rightarrow aA\ |\ \textcolor{ForestGreen}{a}                                                                                                             \\
+    B                  & \rightarrow bB\ |\ \textcolor{ForestGreen}{b}                                                                                                             \\
+    \textcolor{red}{X} & \textcolor{red}{\rightarrow} \textcolor{red}{AB}
+\end{align*}
+
+同时为了满足CNF规则中$ A \rightarrow BC $的要求，需要对如$ A \rightarrow aA $这样的规则进行替换。\\
+
+假设$ A_1 \rightarrow a $、$ B_1 \rightarrow b $：
+
+\vspace{-1cm}
+
+\begin{align*}
+    S                    & \rightarrow \textcolor{ForestGreen}{XA\ |\ BA\ |\ AB}\ |\ \textcolor{red}{B_1B}\ |\ \textcolor{ForestGreen}{b\ |\ AA}\ |\ \textcolor{red}{A_1A}\ |\ \textcolor{ForestGreen}{a} \\
+    A                    & \rightarrow \textcolor{red}{A_1A}\ |\ \textcolor{ForestGreen}{a}                                                                                                               \\
+    B                    & \rightarrow \textcolor{red}{B_1B}\ |\ \textcolor{ForestGreen}{b}                                                                                                               \\
+    X                    & \rightarrow \textcolor{ForestGreen}{AB}                                                                                                                                        \\
+    \textcolor{red}{A_1} & \textcolor{red}{\rightarrow} \textcolor{red}{a}                                                                                                                                \\
+    \textcolor{red}{B_1} & \textcolor{red}{\rightarrow} \textcolor{red}{b}
+\end{align*}
+
+这样就完成了CFG到CNF的转换，语法中的每条规则都满足了CNF的要求。
 
 \newpage
+
+\section{PDA}
+
+\subsection{下推自动机（PDA, Pushdown Automata）}
+
+DFA和NFA由于受限于存储空间的问题，不能识别类似于$ \{a^nb^n\ |\ n \ge 0\} $这种语言。PDA通过一个栈（stack）解决了这个问题。PDA与CFG的功能的等价的。\\
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[node distance=0mm, every node/.style={minimum size=8mm}]
+        \node[draw] (deb) {State Control};
+
+        { [start chain=1]
+        \node[draw] [on chain] at (3,-2){$ a $};
+        \node[draw] [on chain] {$ a $};
+        \node[draw] [on chain] {$ b $};
+        \node[draw] [on chain] {$ b $};
+        }
+        \node at (4.5,-3) {input};
+
+        { [start chain=2 going below]
+        \node[draw] [on chain] at (-2,-3){0};
+        \node[draw] [on chain] {$ x $};
+        \node[draw] [on chain] {$ y $};
+        \node[draw] [on chain] {$ z $};
+        }
+        \node at (-2,-6.5) {stack};
+
+        \begin{scope}[->,>=latex']
+            \draw (deb.east) -| (1-1);
+            \draw (deb.south) |- (2-1.east);
+        \end{scope}
+    \end{tikzpicture}
+    \caption{PDA}
+\end{figure}
+
+PDA由一个六元组$ (Q, \Sigma, \Gamma, \delta, q_0, F) $表示：
+
+\begin{itemize}
+    \item $ Q $：状态集合
+    \item $ \Sigma $：输入字母表
+    \item $ \Gamma $：栈字母表
+    \item $ \delta $：状态转移函数
+    \item $ q_0 $：初始状态
+    \item $ F $：终结状态集合
+\end{itemize}
+
+\vspace{0.5cm}
+
+例如状态转移函数$ \delta(q_1, a, b) = \{(q_2, \epsilon)\} $表示，在状态$ q_1 $时，如果输入字符为$ a $，并且栈顶元素为$ b $，那么就将$ a $消耗掉，并将$ b $出栈，进入状态$ q_2 $。在PDA中可表示为$ a, b \rightarrow \epsilon $。\\
+
+例如状态转移函数$ \delta(q_3, \epsilon, b) = \{(q_4, a), (q_5, b)\} $表示，在状态$ q_3 $时，如果输入字符为空，并且栈顶元素为$ b $，那么有两种选择：
+
+\begin{enumerate}
+    \item 使用$ a $代替栈顶元素$ b $，并进入状态$ q_4 $。
+    \item 栈保持原样（$ b $为栈顶），并进入状态$ q_5 $。
+\end{enumerate}
+

@@ -10,6 +10,7 @@
 - 第2章：上下文无关语言
     - 2.1 上下文无关文法
     - 2.2 CNF
+    - 2.3 PDA
 
 ---
 
@@ -35,9 +36,8 @@
 
 Topics to be covers:
 
-Push Down Automatons
-
-- Deterministic PDA
+Push Down Automata
+    - Deterministic PDA
 
 Predictive Parsers
 
