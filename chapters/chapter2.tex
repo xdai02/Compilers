@@ -697,5 +697,93 @@ PDA由一个六元组$ (Q, \Sigma, \Gamma, \delta, q_0, F) $表示：
 
 \section{预测分析法}
 
-\subsection{预测分析法（Predictive Parser）}
+\subsection{LL(1)文法}
 
+例如产生式$ A \rightarrow +T\ |\ -P $，当读到$ + $开头的串的时候，可以很直接地判断选择$ A \rightarrow +T $这个生成式；而读到$ - $开头的串的时候，可以直接判断选择$ A \rightarrow -P $这个生成式。\\
+
+像这种根据第一个token就能得出选择哪个生成式的情况，就叫做预测分析法。\\
+
+LL(1)文法表示只查看后面1个符号，来判断需要选择的生成式。LL(k)文法则表示根据后k个符号来决定生成式。\\
+
+但是，如果文法是类似于$ A \rightarrow T\ |\ P $这样都以非终结符开头的话，一眼就很难判断。因此就需要知道，$ T $是如何展开的。如果$ T \rightarrow a\ |\ b $，$ P \rightarrow c\ |\ d $, 那当串以$ a $或$ b $开头时，显然需要选择$ A \rightarrow T $；而当串以$ c $或$ d $开头时，就应该选择$ A \rightarrow P $这个生成式。\\
+
+\subsection{FIRST}
+
+为了能够预测下一个生成式，就需要知道每个生成式能够产生的开始符号的集合，称为FIRST集合。$ FIRST(\alpha) $是一个记录所有能够由$ \alpha $推导出的出现在开头的终结字符的集合。\\
+
+例如：
+
+\vspace{-1cm}
+
+\begin{align*}
+    E  & \rightarrow TE'               \\
+    E' & \rightarrow +TE'\ |\ \epsilon \\
+    T  & \rightarrow FT'               \\
+    T' & \rightarrow *FT'\ |\ \epsilon \\
+    F  & \rightarrow  (E)\ |\ id       \\
+\end{align*}
+
+每个终结符的FIRST集合都是自己本身。
+
+\vspace{-1cm}
+
+\begin{align*}
+    FIRST(id)       & = \{id\}       \\
+    FIRST(*)        & = \{*\}        \\
+    FIRST(+)        & = \{+\}        \\
+    FIRST(\text{(}) & = \{\text{(}\} \\
+    FIRST(\text{)}) & = \{\text{)}\}
+\end{align*}
+
+如果$ E \rightarrow T $，则应该把$ FIRST(T) $也加入到$ FIRST(E) $中。
+
+\vspace{-1cm}
+
+\begin{align*}
+    FIRST(E') & = \{+, \epsilon\}             \\
+    FIRST(T') & = \{*, \epsilon\}             \\
+    FIRST(F)  & = \{\text{(}, id\}            \\
+    FIRST(T)  & = FIRST(F) = \{\text{(}, id\} \\
+    FIRST(E)  & = FIRST(T) = \{\text{(}, id\}
+\end{align*}
+
+\vspace{0.5cm}
+
+\subsection{FOLLOW}
+
+仅有FIRST集合还不够，例如：
+
+\vspace{-1cm}
+
+\begin{align*}
+    A & \rightarrow     Tb\ |\ P      \\
+    T & \rightarrow    \epsilon\ |\ a \\
+    P & \rightarrow   c
+\end{align*}
+
+可以得出：
+
+\vspace{-1cm}
+
+\begin{align*}
+    FIRST(T) & = \{\epsilon, a\} \\
+    FIRST(P) & = \{c\}
+\end{align*}
+
+当遇到$ a $开头的串时，应该选择$ A \rightarrow Tb $；当遇到$ c $开头的串时，应该选择$ A \rightarrow P $。\\
+
+但其实，由于$ \epsilon $在$ FIRST(T) $中，所以当遇到$ b $开头的串时，也应该选择$ A \rightarrow Tb $。\\
+
+所以，为了特殊处理当一个非终结字符可以推出$ \epsilon $的情况，就需要知道它后面紧跟的是什么终结字符，这样的集合被称为FOLLOW集合。\\
+
+FOLLOW集合的规则：
+
+\begin{enumerate}
+    \item 当$ S $为开始符号时，将结束标记$ \$ $添加到$ FOLLOW(S) $中。
+
+    \item 如果存在$ A \rightarrow \alpha B \beta $，那么$ FIRST(B) $中除了$ \epsilon $外所有符号都在$ FOLLOW(B) $中。
+
+    \item 如果存在$ A \rightarrow \alpha B $或$ A \rightarrow \alpha B \beta $且$ FIRST(B) $中包含$ \epsilon $，那么$ FOLLOW(A) $中的所有符号都在$ FOLLOW(B) $中。
+\end{enumerate}
+
+\newpage
