@@ -11,42 +11,10 @@
     - 2.1 上下文无关文法
     - 2.2 CNF
     - 2.3 PDA
+    - 2.4 预测分析法
 
----
+- 第3章：图灵机
+    - 3.1 图灵机
+    - 3.2 停机问题
 
-2. 上下文无关语言
-    - 下推自动机
-    - 确定性与语法分析
-
-3. Turing机
-    - Turing机的定义
-    - 用Turing机计算
-    - 随机存取Turing机
-    - 非确定型Turing机
-    - 通用Turing机
-    - 停机问题
-
-4. 计算复杂性
-    - P类
-    - NP类
-    - NP完全性
-    - 多项式时间归约
-
----
-
-Topics to be covers:
-
-Push Down Automata
-    - Deterministic PDA
-
-Predictive Parsers
-
-Useless Variables: Type I & II
-
-Turing Machines
-
-Complexity
-
-- NP Completeness
-
-Logical Theories
+- 第4章：
