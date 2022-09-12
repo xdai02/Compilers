@@ -44,5 +44,223 @@
 
 \section{运行时环境}
 
-\subsection{运行时环境（Runtime Environment）}
+\subsection{存储分配}
+
+编译器在工作过程中，必须为源程序中出现的一些数据对象分配运行时的存储空间。对于那些在编译时刻就可以确定大小的数据对象，可以在编译时刻就为它们分配存储空间，这样的分配策略称为静态存储分配。\\
+
+如果不能在编译时完全确定数据对象的大小，就要采用动态存储分配的策略。即在编译时仅产生各种必要的信息，而在运行时刻，再动态地分配数据对象的存储空间。这包括了栈式存储分配和堆式存储分配。\\
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[scale=0.7]
+        \draw[-] (0,0) -- (0,10) -- (5,10) -- (5,0) -- (0,0);
+        \draw[-] (0,2) -- (5,2);
+        \draw[-] (0,4) -- (5,4);
+        \draw[-] (0,6) -- (5,6);
+        \draw[-] (0,8) -- (5,8);
+
+        \draw[-] (2.5,9) node {静态代码区};
+        \draw[-] (2.5,7) node {静态数据区};
+        \draw[-] (2.5,5) node {栈（Stack）};
+        \draw[-] (2.5,1) node {堆（Heap）};
+
+        \draw[->] (2.5,4) -- (2.5,3.5);
+        \draw[->] (2.5,2) -- (2.5,2.5);
+    \end{tikzpicture}
+    \caption{内存管理}
+\end{figure}
+
+编译程序生成的代码大小通常是固定的，一般存放在代码区。目标程序运行过程中，需要创建和访问的数据对象存放在数据区。\\
+
+栈区由编译器自动分配和释放，存放函数的参数值、局部变量的值等。\\
+
+在编译时刻不能确定大小的对象将被分配在堆区，堆区的空间一般由程序员分配和释放。若程序员不释放，程序结束后被操作系统改回收。\\
+
+\subsection{活动记录（Activation Record）}
+
+编译器通常以过程（或函数、方法）为单位分配存储空间，过程体的每次执行称为该过程的一个活动，过程每执行一次，就为它分配一块连续存储区，用来管理过程一次执行所需的信息。\\
+
+活动记录中包括：
+
+\begin{itemize}
+    \item 实参
+    \item 返回值
+    \item 控制链：指向调用者的活动记录
+    \item 访问链：用来访问存放于其它活动记录中的非局部数据
+    \item 保存的机器状态
+    \item 局部数据
+    \item 临时变量
+\end{itemize}
+
+过程的存储以栈的形式进行管理，当一个过程被调用时，该过程的活动记录被压入栈；当过程结束时，该活动记录被弹出栈。\\
+
+过程调用和过程返回都需要执行一些代码来管理活动记录栈，保存或恢复机器状态等。其中，调用过程时需要为一个活动记录在栈中分配空间，并在此记录的字段中填写信息。过程返回需要恢复机器状态，使得在调用结束之后继续执行。
+
+\newpage
+
+\section{中间代码生成}
+
+\subsection{中间代码生成（Intermediate Code Generation）}
+
+源代码可以直接翻译成目标机器码，但是为什么要将其先翻译成中间代码，再翻译成目标代码呢？\\
+
+如果没有中间代码，那么每种语言都需要为每种目标机器都设计一个编译器。如果使用中间代码表示（intermediate representation），将会使需要设计的编译器少得多。\\
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+        \node (Java) at (-3,3) {Java};
+        \node (Ada) at (-3,1.5) {Ada};
+        \node (Pascal) at (-3,0) {Pascal};
+        \node (C) at (-3,-1.5) {C};
+        \node (C++) at (-3,-3) {C++};
+
+        \node (Sparc) at (3,0.5) {Sparc};
+        \node (MIPS) at (3,1.5) {MIPS};
+        \node (Pentium) at (3,-0.5) {Pentium};
+        \node (Alpha) at (3,-1.5) {Alpha};
+
+        \draw[-] (Java) -- (Sparc);
+        \draw[-] (Java) -- (MIPS);
+        \draw[-] (Java) -- (Pentium);
+        \draw[-] (Java) -- (Alpha);
+        \draw[-] (Ada) -- (Sparc);
+        \draw[-] (Ada) -- (MIPS);
+        \draw[-] (Ada) -- (Pentium);
+        \draw[-] (Ada) -- (Alpha);
+        \draw[-] (Pascal) -- (Sparc);
+        \draw[-] (Pascal) -- (MIPS);
+        \draw[-] (Pascal) -- (Pentium);
+        \draw[-] (Pascal) -- (Alpha);
+        \draw[-] (C) -- (Sparc);
+        \draw[-] (C) -- (MIPS);
+        \draw[-] (C) -- (Pentium);
+        \draw[-] (C) -- (Alpha);
+        \draw[-] (C++) -- (Sparc);
+        \draw[-] (C++) -- (MIPS);
+        \draw[-] (C++) -- (Pentium);
+        \draw[-] (C++) -- (Alpha);
+    \end{tikzpicture}
+
+    \begin{tikzpicture}
+        \node (Java) at (-3,3) {Java};
+        \node (Ada) at (-3,1.5) {Ada};
+        \node (Pascal) at (-3,0) {Pascal};
+        \node (C) at (-3,-1.5) {C};
+        \node (C++) at (-3,-3) {C++};
+
+        \node (IR) at (0,0) {IR};
+
+        \node (Sparc) at (3,0.5) {Sparc};
+        \node (MIPS) at (3,1.5) {MIPS};
+        \node (Pentium) at (3,-0.5) {Pentium};
+        \node (Alpha) at (3,-1.5) {Alpha};
+
+        \draw[-] (Java) -- (IR);
+        \draw[-] (Ada) -- (IR);
+        \draw[-] (Pascal) -- (IR);
+        \draw[-] (C) -- (IR);
+        \draw[-] (C++) -- (IR);
+        \draw[-] (IR) -- (Sparc);
+        \draw[-] (IR) -- (MIPS);
+        \draw[-] (IR) -- (Pentium);
+        \draw[-] (IR) -- (Alpha);
+    \end{tikzpicture}
+    \caption{中间代码}
+\end{figure}
+
+中间代码不依赖目标机的结构，中间语言与具体机器特性无关，一种中间语言可以为生成多种不同型号的目标机的目标代码服务。因此，对于中间语言，要求其不但与机器无关，而且有利于代码生成。\\
+
+\subsection{三地址码（Three Address Code）}
+
+三地址码是一种易于生成且易于转换为机器码的中间代码，它最多使用三个地址和一个运算符来表示一个表达式。\\
+
+\subsubsection{算术表达式}
+
+例如$ 2 * a + (b - 3) $用三地址码表示为：
+
+\vspace{-0.5cm}
+
+\begin{lstlisting}
+t1 = 2 * a
+t2 = b - 3
+x = t1 + t2
+\end{lstlisting}
+
+\vspace{0.5cm}
+
+\subsubsection{数组}
+
+对于数组的表达式$ a[i+1] = a[j*2] + 3 $，用三地址码表示为：
+
+\vspace{-0.5cm}
+
+\begin{lstlisting}
+t1 = j * 2
+t2 = a[t1]
+t3 = t2 + 3
+t4 = i + 1
+a[t4] = t3
+\end{lstlisting}
+
+数组也可以使用地址偏移量的形式表示：
+
+\vspace{-0.5cm}
+
+\begin{lstlisting}
+t1 = j * 2
+t2 = t1 * elem_size(a)
+t3 = &a + t2
+t4 = *t3
+
+t5 = t4 + 3
+
+t6 = i + 1
+t7 = t6 * elem_size(a)
+t8 = &a + t7
+*t8 = t5
+\end{lstlisting}
+
+\vspace{0.5cm}
+
+\subsubsection{条件}
+
+条件语句的三地址码需要使用跳跃（jump）和标签（label）表示。\\
+
+例如$ if(expr) stmt1 else stmt2 $表示为：
+
+\vspace{-0.5cm}
+
+\begin{lstlisting}
+t1 = <code for expr>
+if_false t1 goto L1
+<code for stmt1>
+goto L2
+label L1
+<code for stmt2>
+label L2
+\end{lstlisting}
+
+\vspace{0.5cm}
+
+\subsubsection{循环}
+
+循环语句的三地址码也需要使用跳跃（jump）和标签（label）表示。\\
+
+例如$ while(expr) stmt $表示为：
+
+\vspace{-0.5cm}
+
+\begin{lstlisting}
+label L1
+t1 = <code for expr>
+if_false t1 goto L2
+<code for stmt>
+goto L1
+label L2
+\end{lstlisting}
+
+\newpage
+
+\section{代码优化}
 
