@@ -264,3 +264,100 @@ label L2
 
 \section{代码优化}
 
+\subsection{代码优化（Code Optimization）}
+
+代码优化试图通过使中间代码消耗更少的资源（CPU和内存）来改进中间代码，从而产生运行速度更快的机器代码。\\
+
+代码优化过程应该确保：
+
+\begin{itemize}
+    \item 优化必须是正确的，它不能以任何方式改变程序的含义。
+    \item 优化应该提高程序的速度和性能。
+    \item 编译时间必须保持合理。
+\end{itemize}
+
+代码优化主要可以从以下几个方面进行：
+
+\subsubsection{编译时运算}
+
+在编译期间直接计算出表达式的值，例如：
+
+\vspace{-0.5cm}
+
+\begin{lstlisting}
+x = 9.2
+y = x / 2.3
+\end{lstlisting}
+
+可直接使用$ y = 4.0 $代替。\\
+
+\subsubsection{消除重复计算表达式}
+
+有些表达式可能会被重复地多次计算，可以将第一次计算的结果保存，之后再出现如果重复计算的时候，可直接使用保存的值。\\
+
+\subsubsection{避免保存未使用的变量}
+
+一些变量在定义之后没有被使用，代码优化时可以不用保存这些变量的值。\\
+
+\subsubsection{删除不可到达的代码}
+
+如果一个代码块或函数永远不会被执行或调用，那么可以将其删除。例如：
+
+\vspace{-0.5cm}
+
+\begin{lstlisting}[language=C]
+#define DEBUG 0
+if(DEBUG) {
+    // code
+}
+\end{lstlisting}
+
+\vspace{0.5cm}
+
+\subsubsection{强度削弱}
+
+把强度大的运算换算成强度小的运算，如乘方变乘法、乘法变加法。\\
+
+例如：
+
+\begin{itemize}
+    \item 将$ x^3 $优化为$ x * x * x $
+    \item 将$ 2 * x $优化为$ x << 2 $
+    \item 将$ 5 * x $优化为$ x << 4 + x $
+\end{itemize}
+
+\vspace{0.5cm}
+
+\subsubsection{函数内联（Function Inlining）}
+
+函数内联是指将函数调用处的函数体直接插入到函数调用处，从而避免函数调用的开销。\\
+
+\subsubsection{消除尾递归（Tail Recursion Removal）}
+
+尾递归是指在一个函数内部，递归调用后直接return，没有任何多余的指令了。
+
+\vspace{-0.5cm}
+
+\begin{lstlisting}[language=C]
+int gcd(int u, int v) {
+    if(v == 0) {
+        return u;
+    }
+    return gcd(v, u % v);
+}
+\end{lstlisting}
+
+理论上，所有的递归函数都可以写成循环的方式。因为在尾递归中，递归调用是最后一条待执行的语句，于是当这个调用返回时栈帧中并没有其它事情可做，因此也就没有保存栈帧的必要了。
+\vspace{-0.5cm}
+
+\begin{lstlisting}[language=C]
+int gcd(int u, int v) {
+    while(v != 0) {
+        int t1 = v;
+        int t2 = u % v;
+        u = t1;
+        v = t2;
+    }
+    return u;
+}
+\end{lstlisting}
